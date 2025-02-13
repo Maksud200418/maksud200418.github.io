@@ -76,4 +76,32 @@ canvas.addEventListener("mousemove", (e) => {
     gorilla.x = e.offsetX;
     gorilla.y = e.offsetY;
 
-    // Check if gorilla
+    // Check if gorilla collects bananas
+    bananas.forEach(banana => {
+        if (!banana.collected && Math.abs(gorilla.x - banana.x) < 20 && Math.abs(gorilla.y - banana.y) < 20) {
+            banana.collected = true;
+        }
+    });
+
+    // If there is a collision with a wall, reset the game
+    if (checkCollision()) {
+        alert("Game Over! You hit a wall!");
+        resetGame();
+    }
+
+    // Redraw the game
+    drawGame();
+});
+
+// Reset game if the player hits a wall
+function resetGame() {
+    gorilla.x = 50;
+    gorilla.y = 50;
+    bananas.forEach(banana => banana.collected = false);
+    gameWon = false;
+    document.getElementById("nextButton").style.display = "none";
+    drawGame();
+}
+
+// Initialize the game
+drawGame();
