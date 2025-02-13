@@ -4,64 +4,91 @@ const ctx = canvas.getContext("2d");
 const gorilla = {
     x: 50,
     y: 50,
-    size: 30,
-    speed: 5,
+    size: 20,
+    speed: 4,
     color: "brown"
 };
 
 const bananas = [
-    { x: 150, y: 150, size: 20 },
-    { x: 300, y: 200, size: 20 },
-    { x: 500, y: 100, size: 20 },
-    { x: 650, y: 300, size: 20 }
+    { x: 200, y: 100, collected: false },
+    { x: 400, y: 300, collected: false },
+    { x: 600, y: 500, collected: false }
 ];
 
-let gameOver = false;
+const walls = [
+    { x: 100, y: 150, width: 600, height: 20 },
+    { x: 100, y: 250, width: 600, height: 20 },
+    { x: 100, y: 400, width: 600, height: 20 }
+];
 
-// Draw the gorilla and bananas
-function draw() {
+let gameWon = false;
+
+// Draw game elements
+function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw gorilla
-    ctx.fillStyle = gorilla.color;
-    ctx.fillRect(gorilla.x, gorilla.y, gorilla.size, gorilla.size);
-    
+
+    // Draw walls
+    ctx.fillStyle = "gray";
+    walls.forEach(wall => {
+        ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+    });
+
     // Draw bananas
     ctx.fillStyle = "yellow";
     bananas.forEach(banana => {
-        ctx.beginPath();
-        ctx.arc(banana.x, banana.y, banana.size, 0, Math.PI * 2);
-        ctx.fill();
-    });
-    
-    // Check for collisions (banana collection)
-    bananas.forEach((banana, index) => {
-        if (gorilla.x < banana.x + banana.size && gorilla.x + gorilla.size > banana.x &&
-            gorilla.y < banana.y + banana.size && gorilla.y + gorilla.size > banana.y) {
-            bananas.splice(index, 1); // Remove collected banana
+        if (!banana.collected) {
+            ctx.beginPath();
+            ctx.arc(banana.x, banana.y, 10, 0, Math.PI * 2);
+            ctx.fill();
         }
     });
-    
-    // If all bananas are collected, end the game
-    if (bananas.length === 0) {
-        gameOver = true;
-        document.getElementById("nextButton").style.display = "block"; // Show button to go to next page
+
+    // Draw gorilla
+    ctx.fillStyle = gorilla.color;
+    ctx.beginPath();
+    ctx.arc(gorilla.x, gorilla.y, gorilla.size, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Check for win
+    if (bananas.every(banana => banana.collected) && !gameWon) {
+        gameWon = true;
+        document.getElementById("nextButton").style.display = "block";
     }
 }
 
-// Move the gorilla based on mouse position
+// Move gorilla
 canvas.addEventListener("mousemove", (e) => {
-    if (!gameOver) {
-        gorilla.x = e.offsetX - gorilla.size / 2;
-        gorilla.y = e.offsetY - gorilla.size / 2;
-    }
+    gorilla.x = e.offsetX;
+    gorilla.y = e.offsetY;
+    
+    // Check if the gorilla collects bananas
+    bananas.forEach(banana => {
+        if (!banana.collected && Math.abs(gorilla.x - banana.x) < 20 && Math.abs(gorilla.y - banana.y) < 20) {
+            banana.collected = true;
+        }
+    });
+
+    // Check for wall collisions
+    walls.forEach(wall => {
+        if (gorilla.x > wall.x && gorilla.x < wall.x + wall.width &&
+            gorilla.y > wall.y && gorilla.y < wall.y + wall.height) {
+            alert("Game Over! You hit a wall!");
+            resetGame();
+        }
+    });
+
+    drawGame();
 });
 
-function gameLoop() {
-    if (!gameOver) {
-        draw();
-        requestAnimationFrame(gameLoop);
-    }
+// Reset game
+function resetGame() {
+    gorilla.x = 50;
+    gorilla.y = 50;
+    bananas.forEach(banana => banana.collected = false);
+    gameWon = false;
+    document.getElementById("nextButton").style.display = "none";
+    drawGame();
 }
 
-gameLoop();
+// Initialize the game
+drawGame();
