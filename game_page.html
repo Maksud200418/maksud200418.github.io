@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorilla Maze Game</title>
+    <link rel="stylesheet" href="style.css"> <!-- Assuming you use the same styles -->
+    <style>
+        /* You can add more styles for the game here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        canvas {
+            border: 2px solid #000;
+        }
+
+        .next-page-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .next-page-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gorilla Maze Game</h1>
+    <p>Use your mouse to navigate the gorilla through the maze and collect bananas!</p>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <br>
+    <a href="next.html">
+        <button class="next-page-button" style="display:none;" id="nextButton">Go to French Gorilla Video</button>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>
