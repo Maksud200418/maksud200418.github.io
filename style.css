@@ -1,3 +1,4 @@
+/* Existing styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
@@ -47,4 +48,22 @@ p {
 #popup iframe {
     display: block;
     margin: auto;
+}
+
+/* New button styling */
+.next-page-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.next-page-button:hover {
+    background-color: #45a049;
 }
