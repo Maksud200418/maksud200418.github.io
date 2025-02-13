@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 const gorilla = {
     x: 50,
     y: 50,
-    width: 40,
+    width: 40, // Reduced size
     height: 60,
     color: "brown"
 };
@@ -50,7 +50,7 @@ function generateBananas() {
     }
 }
 
-const gameWon = false;
+let gameWon = false;
 
 // Draw game elements (walls, bananas, gorilla)
 function drawGame() {
@@ -62,12 +62,12 @@ function drawGame() {
         ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
     });
 
-    // Draw bananas as banana-like shapes (curved)
+    // Draw bananas as banana-like shapes (larger)
     ctx.fillStyle = "yellow";
     bananas.forEach(banana => {
         if (!banana.collected) {
             ctx.beginPath();
-            ctx.arc(banana.x, banana.y, 15, Math.PI / 4, (3 * Math.PI) / 4);  // banana-like shape
+            ctx.arc(banana.x, banana.y, 20, Math.PI / 4, (3 * Math.PI) / 4);  // larger banana shape
             ctx.fill();
         }
     });
