@@ -5,25 +5,28 @@ const gorilla = {
     x: 50,
     y: 50,
     size: 20,
-    speed: 4,
     color: "brown"
 };
 
 const bananas = [
     { x: 200, y: 100, collected: false },
-    { x: 400, y: 300, collected: false },
-    { x: 600, y: 500, collected: false }
+    { x: 600, y: 200, collected: false },
+    { x: 400, y: 500, collected: false }
 ];
 
 const walls = [
-    { x: 100, y: 150, width: 600, height: 20 },
-    { x: 100, y: 250, width: 600, height: 20 },
-    { x: 100, y: 400, width: 600, height: 20 }
+    { x: 100, y: 100, width: 600, height: 20 },
+    { x: 100, y: 100, width: 20, height: 400 },
+    { x: 100, y: 400, width: 600, height: 20 },
+    { x: 600, y: 100, width: 20, height: 300 },
+    { x: 200, y: 200, width: 300, height: 20 },
+    { x: 200, y: 300, width: 300, height: 20 },
+    { x: 200, y: 400, width: 300, height: 20 }
 ];
 
 let gameWon = false;
 
-// Draw game elements
+// Draw game elements (walls, bananas, gorilla)
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -49,46 +52,28 @@ function drawGame() {
     ctx.arc(gorilla.x, gorilla.y, gorilla.size, 0, Math.PI * 2);
     ctx.fill();
 
-    // Check for win
+    // Check if the game is won (all bananas collected)
     if (bananas.every(banana => banana.collected) && !gameWon) {
         gameWon = true;
         document.getElementById("nextButton").style.display = "block";
     }
 }
 
-// Move gorilla
+// Check for collision with walls
+function checkCollision() {
+    for (let i = 0; i < walls.length; i++) {
+        const wall = walls[i];
+        if (gorilla.x + gorilla.size > wall.x && gorilla.x - gorilla.size < wall.x + wall.width &&
+            gorilla.y + gorilla.size > wall.y && gorilla.y - gorilla.size < wall.y + wall.height) {
+            return true; // Collision detected
+        }
+    }
+    return false;
+}
+
+// Move gorilla with mouse and collect bananas
 canvas.addEventListener("mousemove", (e) => {
     gorilla.x = e.offsetX;
     gorilla.y = e.offsetY;
-    
-    // Check if the gorilla collects bananas
-    bananas.forEach(banana => {
-        if (!banana.collected && Math.abs(gorilla.x - banana.x) < 20 && Math.abs(gorilla.y - banana.y) < 20) {
-            banana.collected = true;
-        }
-    });
 
-    // Check for wall collisions
-    walls.forEach(wall => {
-        if (gorilla.x > wall.x && gorilla.x < wall.x + wall.width &&
-            gorilla.y > wall.y && gorilla.y < wall.y + wall.height) {
-            alert("Game Over! You hit a wall!");
-            resetGame();
-        }
-    });
-
-    drawGame();
-});
-
-// Reset game
-function resetGame() {
-    gorilla.x = 50;
-    gorilla.y = 50;
-    bananas.forEach(banana => banana.collected = false);
-    gameWon = false;
-    document.getElementById("nextButton").style.display = "none";
-    drawGame();
-}
-
-// Initialize the game
-drawGame();
+    // Check if gorilla
