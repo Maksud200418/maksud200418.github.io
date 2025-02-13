@@ -4,17 +4,11 @@ const ctx = canvas.getContext("2d");
 const gorilla = {
     x: 50,
     y: 50,
-    size: 20,  // This is the radius of the gorilla
-    color: "#8B4513",  // Gorilla color (brown)
+    width: 40,
+    height: 60,
+    color: "brown"
 };
 
-const bananas = [
-    { x: 200, y: 100, collected: false },
-    { x: 600, y: 200, collected: false },
-    { x: 400, y: 500, collected: false }
-];
-
-// Maze walls - adding more specific positions for walls
 const walls = [
     { x: 100, y: 100, width: 600, height: 20 },
     { x: 100, y: 100, width: 20, height: 400 },
@@ -25,7 +19,38 @@ const walls = [
     { x: 200, y: 400, width: 300, height: 20 }
 ];
 
-let gameWon = false;
+const bananas = [];
+
+// Function to check if a banana collides with any walls
+function checkBananaCollision(banana) {
+    for (let i = 0; i < walls.length; i++) {
+        const wall = walls[i];
+        if (banana.x + 15 > wall.x && banana.x - 15 < wall.x + wall.width &&
+            banana.y + 15 > wall.y && banana.y - 15 < wall.y + wall.height) {
+            return true; // Collision with wall
+        }
+    }
+    return false;
+}
+
+// Function to generate valid banana positions
+function generateBananas() {
+    bananas.length = 0; // Clear existing bananas
+    const numberOfBananas = 3; // Number of bananas
+
+    while (bananas.length < numberOfBananas) {
+        let newBanana = {
+            x: Math.random() * (canvas.width - 30) + 15,  // Ensure bananas stay inside canvas bounds
+            y: Math.random() * (canvas.height - 30) + 15
+        };
+
+        if (!checkBananaCollision(newBanana)) {
+            bananas.push(newBanana); // Only add if no collision with walls
+        }
+    }
+}
+
+const gameWon = false;
 
 // Draw game elements (walls, bananas, gorilla)
 function drawGame() {
@@ -37,33 +62,21 @@ function drawGame() {
         ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
     });
 
-    // Draw bananas - make them more banana-shaped
+    // Draw bananas as banana-like shapes (curved)
+    ctx.fillStyle = "yellow";
     bananas.forEach(banana => {
         if (!banana.collected) {
-            ctx.fillStyle = "yellow";
             ctx.beginPath();
-            ctx.ellipse(banana.x, banana.y, 12, 20, 0, 0, Math.PI * 2); // Make it oval (banana-like)
+            ctx.arc(banana.x, banana.y, 15, Math.PI / 4, (3 * Math.PI) / 4);  // banana-like shape
             ctx.fill();
         }
     });
 
-    // Draw gorilla - make it look more like a monkey
+    // Draw gorilla as a more appropriate shape (rectangular body, face, arms)
     ctx.fillStyle = gorilla.color;
+    ctx.fillRect(gorilla.x - gorilla.width / 2, gorilla.y - gorilla.height / 2, gorilla.width, gorilla.height);  // gorilla body
     ctx.beginPath();
-    ctx.arc(gorilla.x, gorilla.y, gorilla.size, 0, Math.PI * 2);  // Drawing a circle for gorilla's head
-    ctx.fill();
-    
-    // Draw eyes and face (simple additions to make the gorilla look better)
-    ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.arc(gorilla.x - 5, gorilla.y - 5, 5, 0, Math.PI * 2);  // Left eye
-    ctx.arc(gorilla.x + 5, gorilla.y - 5, 5, 0, Math.PI * 2);  // Right eye
-    ctx.fill();
-    
-    ctx.fillStyle = "black";
-    ctx.beginPath();
-    ctx.arc(gorilla.x - 5, gorilla.y - 5, 2, 0, Math.PI * 2);  // Left pupil
-    ctx.arc(gorilla.x + 5, gorilla.y - 5, 2, 0, Math.PI * 2);  // Right pupil
+    ctx.arc(gorilla.x, gorilla.y - 25, 25, 0, Math.PI * 2); // gorilla face
     ctx.fill();
 
     // Check if the game is won (all bananas collected)
@@ -77,8 +90,8 @@ function drawGame() {
 function checkCollision() {
     for (let i = 0; i < walls.length; i++) {
         const wall = walls[i];
-        if (gorilla.x + gorilla.size > wall.x && gorilla.x - gorilla.size < wall.x + wall.width &&
-            gorilla.y + gorilla.size > wall.y && gorilla.y - gorilla.size < wall.y + wall.height) {
+        if (gorilla.x + gorilla.width / 2 > wall.x && gorilla.x - gorilla.width / 2 < wall.x + wall.width &&
+            gorilla.y + gorilla.height / 2 > wall.y && gorilla.y - gorilla.height / 2 < wall.y + wall.height) {
             return true; // Collision detected
         }
     }
@@ -111,6 +124,7 @@ canvas.addEventListener("mousemove", (e) => {
 function resetGame() {
     gorilla.x = 50;
     gorilla.y = 50;
+    generateBananas(); // Re-generate bananas after reset
     bananas.forEach(banana => banana.collected = false);
     gameWon = false;
     document.getElementById("nextButton").style.display = "none";
@@ -118,4 +132,5 @@ function resetGame() {
 }
 
 // Initialize the game
+generateBananas(); // Generate bananas when the game starts
 drawGame();
