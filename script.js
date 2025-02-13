@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let randomX = Math.floor(Math.random() * maxX);
         let randomY = Math.floor(Math.random() * maxY);
 
-        popup.style.transition = "left 1s ease-in-out, top 1s ease-in-out";
+        popup.style.transition = "left 0.7s ease-in-out, top 0.7s ease-in-out";
         popup.style.position = "absolute";
         popup.style.left = `${randomX}px`;
         popup.style.top = `${randomY}px`;

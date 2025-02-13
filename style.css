@@ -1,25 +1,50 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    color: #202122;
+}
+
+#content {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border: 1px solid #a2a9b1;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 1.8em;
+    color: #000;
     text-align: center;
-    margin: 50px;
+}
+
+p {
+    line-height: 1.6;
+    font-size: 1.1em;
 }
 
 #popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border: 2px solid black;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    position: absolute;
+    background: white;
+    padding: 15px;
+    border: 2px solid #a2a9b1;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    display: none;
 }
 
 #close-btn {
-    background-color: red;
+    background: red;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    font-weight: bold;
+}
+
+#popup iframe {
+    display: block;
+    margin: auto;
 }
